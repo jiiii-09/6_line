@@ -87,16 +87,24 @@ function setup() {
 function draw() {
   background(0, 40);
 
-let totalHeight = calcTotalTextHeight();
+  // ----------------------------------------
+  // 🔥 스크롤 계산
+  // ----------------------------------------
+  let totalHeight = calcTotalTextHeight();
   let visibleHeight = height - 150;
   let maxOffset = max(0, totalHeight - visibleHeight);
 
-  // ⭐ 자동스크롤 조건:
-  // '거의 맨 아래를 보고 있을 때'만 딱 바닥에 붙여줌
-  if (scrollOffset > maxOffset - 20) {
+  // ⭐ 사용자가 현재 거의 맨 아래인지 판단
+  let userIsAtBottom = scrollOffset > maxOffset - 20;
+
+  // ⭐ 자동스크롤: 사용자가 맨 아래 있을 때만
+  if (userIsAtBottom) {
     scrollOffset = maxOffset;
   }
 
+  // ----------------------------------------
+  // 🔥 렌더링
+  // ----------------------------------------
   push();
   translate(0, -scrollOffset);
   let yOffset = 100;
@@ -109,13 +117,13 @@ let totalHeight = calcTotalTextHeight();
 
     for (let w of words) {
       fill(l.colors[w] || color(255));
-      textFont(l.fonts[w] || "sans-serif"); // ✅ 단어별 폰트 적용
+      textFont(l.fonts[w] || "sans-serif");
       textSize(l.size);
 
       let wWidth = textWidth(w + " ");
       if (x + wWidth > width - 50) {
         x = 50;
-        y += l.size * 0.9;   // 🔥 글자 크기 기준으로 줄 높이 자동 결정
+        y += l.size * 0.9;
         lineCount++;
       }
       text(w, x, y);
@@ -125,13 +133,13 @@ let totalHeight = calcTotalTextHeight();
     yOffset += lineCount * (l.size * 0.9);
   }
 
-  // 임시 회색 텍스트 (항상 기본 폰트)
+  // 임시 텍스트 렌더
   if (tempTranscript.length > 0) {
     let vol = mic.getLevel();
     let scaledVol = pow(vol * 15, 2);
     let size = map(scaledVol, 0, 1, 20, 220);
     size = constrain(size, 20, 220);
-    size *= 3; 
+    size *= 3;
 
     textFont("sans-serif");
     textSize(size);
@@ -141,6 +149,7 @@ let totalHeight = calcTotalTextHeight();
 
   pop();
 }
+
 
 function mousePressed() {
   if (!mic) {
