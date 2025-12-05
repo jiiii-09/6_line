@@ -239,28 +239,6 @@ function calcTotalTextHeight() {
   return totalHeight;
 }
 
-
-function startRecognition() {
-  recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-  recognition.lang = "ko-KR";
-  recognition.continuous = true;
-  recognition.interimResults = true;
-
-  recognition.onresult = (event) => {
-    let lastResult = event.results[event.results.length - 1];
-    let transcript = lastResult[0].transcript.trim();
-
-    if (lastResult.isFinal) {
-      addLine(transcript);
-      tempTranscript = "";
-    } else {
-      tempTranscript = transcript;
-    }
-  };
-
-  recognition.start();
-}
-
 function getEmotionFromWord(txt) {
   if (["기뻐", "기쁘", "행복", "좋", "즐거워", "웃", "아름", "훌륭", "평화", "만족","빛","사랑","가볍","안녕"].some(w => txt.includes(w))) return "joy";
   if (["슬퍼", "우울", "눈물", "외로", "잃", "그리","망각","죄송","아비규환","그림자","패배","무겁","슬픈","슬프"].some(w => txt.includes(w))) return "sadness";
@@ -301,17 +279,13 @@ function startRecognition() {
     }
   };
 
-  //------------------------------------------------------------------
-  // 🚀 핵심: 인식이 끝나면 자동 재시작
-  //------------------------------------------------------------------
+  // 🎯 인식이 종료되면 자동 재시작
   recognition.onend = () => {
     console.warn("⛔ Recognition ended → restarting...");
     restartRecognition();
   };
 
-  //------------------------------------------------------------------
-  // 🚀 에러 발생해도 자동 재시작
-  //------------------------------------------------------------------
+  // 🎯 에러 발생해도 자동 재시작
   recognition.onerror = (event) => {
     console.warn("⚠️ Recognition error:", event.error);
     restartRecognition();
@@ -319,6 +293,7 @@ function startRecognition() {
 
   recognition.start();
 }
+
 
 // 🔁 안전한 재시작
 function restartRecognition() {
