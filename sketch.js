@@ -344,8 +344,6 @@ function restartRecognition() {
 // -----------------------------------------------------
 function mouseWheel(event) {
 
-  if (!autoScroll) return false;
-
   scrollOffset += event.delta;
 
   let totalHeight = calcTotalTextHeight();
