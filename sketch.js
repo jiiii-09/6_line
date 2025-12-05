@@ -322,3 +322,12 @@ function mouseWheel(event) {
 
   return false;
 }
+
+function keyPressed() {
+  if (key === ' ') {   // space bar
+    // 맨 아래
+    let totalHeight = calcTotalTextHeight();
+    let visibleHeight = height - 200;
+    scrollOffset = max(0, totalHeight - visibleHeight);
+  }
+}
