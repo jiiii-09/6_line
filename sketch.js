@@ -36,25 +36,14 @@ function setup() {
       "KimJeongWonSMiss"
     ],
     surprise: [
-      "Do Hyeon",
-      // "SurpriseFont2",
-      // "SurpriseFont3",
-      // "SurpriseFont4",
-      // "SurpriseFont5"
+      "Do Hyeon"
     ],
     fear: [
       "Hahmlet",
-      // "FearFont2",
-      // "FearFont3",
-      // "FearFont4",
-      // "FearFont5"
+      // "FearFont2"
     ],
     disgust: [
-      "Kirang Haerang",
-      // "DisgustFont2",
-      // "DisgustFont3",
-      // "DisgustFont4",
-      // "DisgustFont5"
+      "Kirang Haerang"
     ],
     anger: [
       "Noto Serif KR",
@@ -99,13 +88,14 @@ function draw() {
   background(0, 40);
 
 let totalHeight = calcTotalTextHeight();
-let visibleHeight = height - 150;
+  let visibleHeight = height - 150;
+  let maxOffset = max(0, totalHeight - visibleHeight);
 
-// ⭐ 자동스크롤 조건:
-// 현재 스크롤 위치가 최하단 근처일 때만 자동으로 내려감
-if (scrollOffset < totalHeight - visibleHeight - 20) {
-  scrollOffset = totalHeight - visibleHeight;
-}
+  // ⭐ 자동스크롤 조건:
+  // '거의 맨 아래를 보고 있을 때'만 딱 바닥에 붙여줌
+  if (scrollOffset > maxOffset - 20) {
+    scrollOffset = maxOffset;
+  }
 
   push();
   translate(0, -scrollOffset);
@@ -226,9 +216,12 @@ function calcTotalTextHeight() {
   for (let l of lines) {
     let x = 50;
     let lineCount = 1;
+
+    textFont("sans-serif");      // 기본 폰트 기준으로 폭 계산 (안정성 ↑)
     textSize(l.size);
+
     let words = l.txt.split(" ");
-    let thisLineHeight = l.size * 0.9;   // 🔥 글자 크기 기준 줄 높이
+    let thisLineHeight = l.size * 0.9;
 
     for (let w of words) {
       let wWidth = textWidth(w + " ");
@@ -242,6 +235,7 @@ function calcTotalTextHeight() {
   }
   return totalHeight;
 }
+
 
 function startRecognition() {
   recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
