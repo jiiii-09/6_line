@@ -95,10 +95,6 @@ let totalHeight = calcTotalTextHeight();
 let visibleHeight = height - 200;
 let maxOffset = max(0, totalHeight - visibleHeight);
 
-// 🔥 자동스크롤이 켜져 있을 때만, 항상 최신 위치로 붙여줌
-if (autoScroll) {
-  scrollOffset = maxOffset;
-}
 
   // ----------------------------------------
   // 🔥 렌더링
@@ -335,10 +331,6 @@ function restartRecognition() {
     }
   }, 300);
 }
-
-// -----------------------------------------------------
-// 🖱 마우스 휠로 과거 텍스트 보기 기능
-// -----------------------------------------------------
 // -----------------------------------------------------
 // 🖱 마우스 휠로 과거 텍스트 보기 기능
 // -----------------------------------------------------
@@ -350,17 +342,8 @@ function mouseWheel(event) {
   let visibleHeight = height - 200;
   let maxOffset = max(0, totalHeight - visibleHeight);
 
+  // 🔥 범위 안에서만 움직이게
   scrollOffset = constrain(scrollOffset, 0, maxOffset);
-
-  // 🔥 사용자가 '위로 많이 스크롤' → 자동스크롤 OFF
-  if (scrollOffset < maxOffset - 50) {
-    autoScroll = false;
-  }
-
-  // 🔥 다시 거의 맨 아래로 오면 → 자동스크롤 ON
-  if (scrollOffset >= maxOffset - 5) {
-    autoScroll = true;
-  }
 
   return false;
 }
